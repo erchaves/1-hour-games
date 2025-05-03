@@ -33,7 +33,6 @@ export default {
           '50.01%, 100%': { opacity: '0' },
         }
       }
-    },
+    }
   },
-  plugins: [],
 }
