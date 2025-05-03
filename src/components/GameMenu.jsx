@@ -5,9 +5,16 @@ import { Link } from 'react-router-dom';
 const GameMenu = () => {
   const games = [
     {
+      id: '3-body',
+      title: '3 Body',
+      description: `TODO`,
+      color: 'from-red-600 to-yellow-600',
+      icon: '📍'
+    },
+    {
       id: 'space-invaders',
       title: 'Space Invaders',
-      description: 'Classic alien shooting game',
+      description: `Placeholder. Not working.`,
       color: 'from-purple-600 to-pink-600',
       icon: '👾'
     },
@@ -21,14 +28,14 @@ const GameMenu = () => {
     {
       id: 'pong',
       title: 'Pong',
-      description: 'Two-player paddle game',
+      description: `Placeholder. Not working.`,
       color: 'from-blue-600 to-cyan-600',
       icon: '🏓'
     },
     {
       id: 'breakout',
       title: 'Breakout',
-      description: 'Break all the bricks',
+      description: `Placeholder. Not working.`,
       color: 'from-orange-600 to-red-600',
       icon: '🧱'
     }
@@ -42,7 +49,7 @@ const GameMenu = () => {
         className="text-center mb-12"
       >
         <h1 className="text-6xl font-arcade mb-4">Sketchbook Arcade</h1>
-        <p className="text-xl font-arcade text-arcade-yellow">1 HOUR VIBE-CODED GAMES BECAUSE NO REASON</p>
+        <p className="text-xl font-arcade text-arcade-yellow">MINI GAMES VIBE-CODED IN 1 HOUR. BECAUSE NO REASON</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
