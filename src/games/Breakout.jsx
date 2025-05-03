@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { GameEngine } from '../utils/gameEngine';
+import { Link } from 'react-router-dom';
 
 const Breakout = () => {
   const canvasRef = useRef(null);
@@ -271,6 +272,10 @@ const Breakout = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-4">
+      <Link to="/" className="mb-8 text-arcade-yellow hover:text-arcade-green transition-colors">
+        ← Back to Menu
+      </Link>
+
       <h1 className="text-4xl font-bold mb-4 font-['Press_Start_2P']">BREAKOUT</h1>
 
       <div className="relative">

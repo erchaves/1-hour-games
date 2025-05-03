@@ -7,35 +7,28 @@ const GameMenu = () => {
     {
       id: '3-body',
       title: '3 Body',
-      description: `TODO`,
+      description: `Resonate the 3-body Pendulum`,
       color: 'from-red-600 to-yellow-600',
       icon: '📍'
     },
     {
-      id: 'space-invaders',
-      title: 'Space Invaders',
-      description: `Placeholder. Not working.`,
-      color: 'from-purple-600 to-pink-600',
-      icon: '👾'
-    },
-    {
       id: 'snake',
       title: 'Snake',
-      description: 'Eat food and grow longer',
+      description: 'Eat food and avoid poison',
       color: 'from-green-600 to-emerald-600',
       icon: '🐍'
     },
     {
       id: 'pong',
       title: 'Pong',
-      description: `Placeholder. Not working.`,
+      description: `Classic Pong Game`,
       color: 'from-blue-600 to-cyan-600',
       icon: '🏓'
     },
     {
       id: 'breakout',
       title: 'Breakout',
-      description: `Placeholder. Not working.`,
+      description: `Break all the bricks`,
       color: 'from-orange-600 to-red-600',
       icon: '🧱'
     }
@@ -48,7 +41,7 @@ const GameMenu = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-12"
       >
-        <h1 className="text-6xl font-arcade mb-4">Sketchbook Arcade</h1>
+        <h1 className="text-6xl font-arcade mb-4">Vibe-Code Arcade</h1>
         <p className="text-xl font-arcade text-arcade-yellow">MINI GAMES VIBE-CODED IN 1 HOUR. BECAUSE NO REASON</p>
       </motion.div>
 

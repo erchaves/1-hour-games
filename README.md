@@ -54,8 +54,8 @@ npm run dev
 
 ## 🎯 Available Games
 
-1. **Snake** - Classic snake game with grid-based movement
-2. **Space Invaders** - Shoot down waves of alien invaders (coming soon)
+1. **3-Body Game** - TODO describe
+2. **Snake** - Classic snake game with grid-based movement
 3. **Pong** - Two-player paddle game (coming soon)
 4. **Breakout** - Break all the bricks with your paddle (coming soon)
 

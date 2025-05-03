@@ -379,15 +379,18 @@ const ThreeBody = () => {
 
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4">
       <Link to="/" className="mb-8 text-arcade-yellow hover:text-arcade-green transition-colors">
-        ← Back to Menu
+          ← Back to Menu
       </Link>
 
       <h1 className="text-4xl font-arcade mb-4">3 BODY</h1>
 
       {/*Start */}
       <div className="flex flex-col items-center p-4 rounded-lg">
-        <h3 className="text-m mb-4">
+        <h3 className="text-m">
           Win by spinning all three planets around the middle
+        </h3>
+        <h3 className="text-m mb-4">
+          This game is terrible. Just a first 1-hour sketch...
         </h3>
 
         <div className="relative w-full h-96 bg-white rounded-lg shadow mb-4">
@@ -684,7 +687,7 @@ const ThreeBody = () => {
                     <div className="text-xs ml-2">(Press 1,2,3 to select)</div>
                   </div>
 
-                  <div className="flex items-center mb-2 bg-yellow-100 p-2 rounded">
+                  <div className="flex items-center mb-2 bg-black-100 p-2 rounded">
                     <div className="text-xs">
                       <strong>Controls:</strong> Press and hold left/right arrow
                       keys to apply rotation to the selected mass.
