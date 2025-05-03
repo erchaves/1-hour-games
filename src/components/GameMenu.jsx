@@ -41,7 +41,7 @@ const GameMenu = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-12"
       >
-        <h1 className="text-6xl font-arcade mb-4">TERRAMENT</h1>
+        <h1 className="text-6xl font-arcade mb-4">Vibe Coded Mini Games</h1>
         <p className="text-xl font-arcade text-arcade-yellow">ARCADE</p>
       </motion.div>
 
