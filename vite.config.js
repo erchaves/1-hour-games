@@ -5,6 +5,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/1-hour-games/',
   plugins: [
     react(),
     tailwindcss(),
