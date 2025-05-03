@@ -9,7 +9,7 @@ import Breakout from './games/Breakout';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/1-hour-games">
       <div className="min-h-screen bg-gray-900">
         <Routes>
           <Route path="/" element={<GameMenu />} />
