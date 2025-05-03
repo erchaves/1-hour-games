@@ -1,212 +1,207 @@
-// Shared game engine utilities for all arcade games
+// src/utils/gameEngine.js
 
 export class GameEngine {
   constructor(canvas, options = {}) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
-    this.width = options.width || 800;
-    this.height = options.height || 600;
-    this.fps = options.fps || 60;
-    this.running = false;
+    this.isRunning = false;
     this.lastTime = 0;
-    this.accumulator = 0;
-    this.deltaTime = 1000 / this.fps;
+    this.animationFrame = null;
 
-    // Game state
-    this.score = 0;
-    this.lives = 3;
-    this.level = 1;
-    this.gameOver = false;
-
-    // Callbacks
+    // Game loop callbacks
     this.onUpdate = options.onUpdate || (() => {});
     this.onRender = options.onRender || (() => {});
-    this.onGameOver = options.onGameOver || (() => {});
 
-    this.init();
-  }
+    // Fixed time step for physics
+    this.fixedTimeStep = 1000 / 60; // 60 FPS
+    this.accumulator = 0;
 
-  init() {
-    this.canvas.width = this.width;
-    this.canvas.height = this.height;
-    this.setupInputHandlers();
-  }
-
-  setupInputHandlers() {
-    this.keys = {};
-
-    window.addEventListener('keydown', (e) => {
-      this.keys[e.key] = true;
-    });
-
-    window.addEventListener('keyup', (e) => {
-      this.keys[e.key] = false;
-    });
+    // Performance monitoring
+    this.fps = 0;
+    this.frameCount = 0;
+    this.lastFpsUpdate = 0;
   }
 
   start() {
-    this.running = true;
+    if (this.isRunning) return;
+
+    this.isRunning = true;
     this.lastTime = performance.now();
-    this.gameLoop();
+    this.lastFpsUpdate = this.lastTime;
+    this.gameLoop(this.lastTime);
   }
 
   stop() {
-    this.running = false;
+    this.isRunning = false;
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+      this.animationFrame = null;
+    }
   }
 
-  gameLoop(currentTime = performance.now()) {
-    if (!this.running) return;
+  gameLoop(currentTime) {
+    if (!this.isRunning) return;
 
-    const frameTime = currentTime - this.lastTime;
+    this.animationFrame = requestAnimationFrame((time) => this.gameLoop(time));
+
+    const deltaTime = currentTime - this.lastTime;
     this.lastTime = currentTime;
-    this.accumulator += frameTime;
 
-    while (this.accumulator >= this.deltaTime) {
-      this.update(this.deltaTime / 1000);
-      this.accumulator -= this.deltaTime;
+    // Update FPS
+    this.frameCount++;
+    if (currentTime - this.lastFpsUpdate >= 1000) {
+      this.fps = this.frameCount;
+      this.frameCount = 0;
+      this.lastFpsUpdate = currentTime;
     }
 
-    this.render();
-    requestAnimationFrame((time) => this.gameLoop(time));
-  }
+    // Fixed time step update
+    this.accumulator += deltaTime;
 
-  update(dt) {
-    if (this.gameOver) return;
-    this.onUpdate(dt);
-  }
+    while (this.accumulator >= this.fixedTimeStep) {
+      this.onUpdate(this.fixedTimeStep / 1000); // Convert to seconds
+      this.accumulator -= this.fixedTimeStep;
+    }
 
-  render() {
-    this.ctx.clearRect(0, 0, this.width, this.height);
+    // Render
     this.onRender(this.ctx);
-    this.renderUI();
-  }
 
-  renderUI() {
-    this.ctx.fillStyle = 'white';
-    this.ctx.font = '20px "Press Start 2P"';
-    this.ctx.fillText(`Score: ${this.score}`, 10, 30);
-    this.ctx.fillText(`Lives: ${this.lives}`, 10, 60);
-    this.ctx.fillText(`Level: ${this.level}`, 10, 90);
-  }
-
-  addScore(points) {
-    this.score += points;
-  }
-
-  loseLife() {
-    this.lives--;
-    if (this.lives <= 0) {
-      this.endGame();
+    // Draw FPS (optional)
+    if (this.showFps) {
+      this.ctx.fillStyle = '#fff';
+      this.ctx.font = '16px monospace';
+      this.ctx.fillText(`FPS: ${this.fps}`, 10, 20);
     }
   }
 
-  nextLevel() {
-    this.level++;
+  // Utility methods
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  endGame() {
-    this.gameOver = true;
-    this.onGameOver(this.score);
-  }
-}
-
-// Shared collision detection utilities
-export const collision = {
-  rectRect: (rect1, rect2) => {
+  // Collision detection utilities
+  static rectCollision(rect1, rect2) {
     return rect1.x < rect2.x + rect2.width &&
            rect1.x + rect1.width > rect2.x &&
            rect1.y < rect2.y + rect2.height &&
            rect1.y + rect1.height > rect2.y;
-  },
+  }
 
-  circleCircle: (circle1, circle2) => {
+  static circleCollision(circle1, circle2) {
     const dx = circle1.x - circle2.x;
     const dy = circle1.y - circle2.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     return distance < circle1.radius + circle2.radius;
-  },
-
-  pointInRect: (point, rect) => {
-    return point.x >= rect.x &&
-           point.x <= rect.x + rect.width &&
-           point.y >= rect.y &&
-           point.y <= rect.y + rect.height;
-  }
-};
-
-// Shared sprite animation system
-export class Sprite {
-  constructor(image, frameWidth, frameHeight, frameCount = 1) {
-    this.image = image;
-    this.frameWidth = frameWidth;
-    this.frameHeight = frameHeight;
-    this.frameCount = frameCount;
-    this.currentFrame = 0;
-    this.frameTimer = 0;
-    this.frameInterval = 100; // ms per frame
   }
 
-  update(dt) {
-    this.frameTimer += dt * 1000;
-    if (this.frameTimer >= this.frameInterval) {
-      this.currentFrame = (this.currentFrame + 1) % this.frameCount;
-      this.frameTimer = 0;
-    }
-  }
+  static circleRectCollision(circle, rect) {
+    const closestX = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
+    const closestY = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
 
-  draw(ctx, x, y, scale = 1) {
-    ctx.drawImage(
-      this.image,
-      this.currentFrame * this.frameWidth,
-      0,
-      this.frameWidth,
-      this.frameHeight,
-      x,
-      y,
-      this.frameWidth * scale,
-      this.frameHeight * scale
-    );
+    const dx = circle.x - closestX;
+    const dy = circle.y - closestY;
+
+    return (dx * dx + dy * dy) < (circle.radius * circle.radius);
   }
 }
 
-// Shared particle system
+// Particle system for visual effects
 export class ParticleSystem {
   constructor() {
     this.particles = [];
   }
 
-  emit(x, y, options = {}) {
+  addParticle(x, y, options = {}) {
     const particle = {
       x,
       y,
-      vx: options.vx || (Math.random() - 0.5) * 2,
-      vy: options.vy || (Math.random() - 0.5) * 2,
+      vx: options.vx || (Math.random() - 0.5) * 4,
+      vy: options.vy || (Math.random() - 0.5) * 4,
       life: options.life || 1,
       maxLife: options.life || 1,
-      color: options.color || 'white',
+      color: options.color || '#fff',
       size: options.size || 2
     };
+
     this.particles.push(particle);
   }
 
   update(dt) {
     for (let i = this.particles.length - 1; i >= 0; i--) {
-      const p = this.particles[i];
-      p.x += p.vx * dt * 100;
-      p.y += p.vy * dt * 100;
-      p.life -= dt;
+      const particle = this.particles[i];
 
-      if (p.life <= 0) {
+      particle.x += particle.vx * dt;
+      particle.y += particle.vy * dt;
+      particle.life -= dt;
+
+      if (particle.life <= 0) {
         this.particles.splice(i, 1);
       }
     }
   }
 
-  draw(ctx) {
-    this.particles.forEach(p => {
-      const alpha = p.life / p.maxLife;
-      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-      ctx.fillRect(p.x, p.y, p.size, p.size);
+  render(ctx) {
+    this.particles.forEach(particle => {
+      const alpha = particle.life / particle.maxLife;
+      ctx.fillStyle = particle.color;
+      ctx.globalAlpha = alpha;
+      ctx.fillRect(
+        particle.x - particle.size / 2,
+        particle.y - particle.size / 2,
+        particle.size,
+        particle.size
+      );
     });
+    ctx.globalAlpha = 1;
+  }
+}
+
+// Sound manager for game audio
+export class SoundManager {
+  constructor() {
+    this.sounds = {};
+    this.muted = false;
+  }
+
+  loadSound(name, url) {
+    const audio = new Audio(url);
+    this.sounds[name] = audio;
+  }
+
+  play(name) {
+    if (this.muted || !this.sounds[name]) return;
+
+    const sound = this.sounds[name].cloneNode();
+    sound.play().catch(e => console.log('Audio play failed:', e));
+  }
+
+  toggleMute() {
+    this.muted = !this.muted;
+  }
+}
+
+// High score manager using localStorage
+export class HighScoreManager {
+  constructor(gameId) {
+    this.gameId = gameId;
+    this.storageKey = `highscores_${gameId}`;
+  }
+
+  getHighScores() {
+    const scores = localStorage.getItem(this.storageKey);
+    return scores ? JSON.parse(scores) : [];
+  }
+
+  addScore(name, score) {
+    const scores = this.getHighScores();
+    scores.push({ name, score, date: new Date().toISOString() });
+    scores.sort((a, b) => b.score - a.score);
+    scores.splice(10); // Keep only top 10
+    localStorage.setItem(this.storageKey, JSON.stringify(scores));
+  }
+
+  isHighScore(score) {
+    const scores = this.getHighScores();
+    return scores.length < 10 || score > scores[scores.length - 1].score;
   }
 }
