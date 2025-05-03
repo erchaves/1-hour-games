@@ -41,8 +41,8 @@ const GameMenu = () => {
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-12"
       >
-        <h1 className="text-6xl font-arcade mb-4">Vibe Coded Mini Games</h1>
-        <p className="text-xl font-arcade text-arcade-yellow">ARCADE</p>
+        <h1 className="text-6xl font-arcade mb-4">Sketchbook Arcade</h1>
+        <p className="text-xl font-arcade text-arcade-yellow">1 HOUR VIBE-CODED GAMES BECAUSE NO REASON</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
@@ -70,7 +70,7 @@ const GameMenu = () => {
         transition={{ delay: 0.5 }}
         className="text-center mt-12"
       >
-        <p className="font-arcade text-sm animate-blink">INSERT COIN TO PLAY</p>
+        <p className="font-arcade text-sm animate-blink">FREE PLAY</p>
       </motion.div>
     </div>
   );
