@@ -1,3 +1,56 @@
+/* src/index.css */
 @import "tailwindcss";
 
-/*tailwind ready css here*/
+/* Import arcade fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+/* Custom theme configuration for Tailwind v4 */
+@theme {
+  /* Arcade colors */
+  --color-arcade-green: #00ff00;
+  --color-arcade-blue: #00ffff;
+  --color-arcade-red: #ff0000;
+  --color-arcade-yellow: #ffff00;
+  --color-arcade-purple: #ff00ff;
+  --color-arcade-orange: #ff8000;
+  --color-arcade-dark: #000000;
+  --color-arcade-light: #ffffff;
+  --color-arcade-gray: #808080;
+
+  /* Custom fonts */
+  --font-family-arcade: "Press Start 2P", cursive;
+  --font-family-retro: "VT323", monospace;
+
+  /* Custom animations */
+  --animate-blink: blink 1s step-end infinite;
+  --animate-pulse-fast: pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-shake: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+
+  /* Custom shadows */
+  --shadow-arcade: 0 0 0 3px #000, 0 0 0 6px #fff;
+  --shadow-arcade-lg: 0 0 0 4px #000, 0 0 0 8px #fff;
+
+  /* Custom spacing */
+  --spacing-128: 32rem;
+  --spacing-144: 36rem;
+}
+
+/* Keyframe animations */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* Any additional global styles can go here */
+body {
+  font-family: var(--font-family-retro);
+  background-color: var(--color-arcade-dark);
+  color: var(--color-arcade-light);
+}
