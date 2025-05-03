@@ -1,6 +1,6 @@
 # YOUR PROJECT
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/erchaves/1-hour-games)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/erchaves/1-hour-games/tree/stackblitz-initial-setup)
 
 Project Description
 
@@ -14,7 +14,7 @@ Click the button above to instantly run this project in your browser with StackB
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/erchaves/1-hour-games.git
+git clone https://github.com/erchaves/1-hour-games/tree/stackblitz-initial-setup.git
 cd 1-hour-games
 ```
 
