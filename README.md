@@ -1,6 +1,6 @@
 # 1-Hour Games - Arcade Collection
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/erchaves/1-hour-games/tree/stackblitz-initial-setup)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/erchaves/1-hour-games)
 
 A collection of classic arcade games built with React and Tailwind CSS. Each game is designed to be built in about an hour!
 
@@ -22,7 +22,7 @@ Click the button above to instantly run this project in your browser with StackB
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/erchaves/1-hour-games/tree/stackblitz-initial-setup.git
+git clone https://github.com/erchaves/1-hour-games.git
 cd 1-hour-games
 ```
 
