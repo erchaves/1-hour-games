@@ -1,35 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './vite-demo.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import GameMenu from './components/GameMenu';
+import Snake from './games/Snake';
+import SpaceInvaders from './games/SpaceInvaders';
+import Pong from './games/Pong';
+import Breakout from './games/Breakout';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div className="flex justify-center">
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo flex-auto" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react flex-auto" alt="React logo" />
-        </a>
+    <Router>
+      <div className="min-h-screen bg-gray-900">
+        <Routes>
+          <Route path="/" element={<GameMenu />} />
+          <Route path="/games/snake" element={<Snake />} />
+          <Route path="/games/space-invaders" element={<SpaceInvaders />} />
+          <Route path="/games/pong" element={<Pong />} />
+          <Route path="/games/breakout" element={<Breakout />} />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p className="m-10">
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
