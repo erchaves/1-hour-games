@@ -7,37 +7,93 @@ export class Camera {
     this.position = new Vector3D(0, 0, 0);
     this.rotation = new Vector3D(0, 0, 0);
     this.fov = 1000;
-    this.distance = 200; // Distance behind ship
+    this.distance = 100; // Distance behind ship
+    this.shakeAmount = 0;
+    this.shakeDuration = 0;
+    this.shakeOffset = new Vector3D(0, 0, 0);
   }
 
   followShip(ship) {
     // Get ship's forward vector
     const forward = ship.getForwardVector();
 
-    // Position camera behind and slightly above the ship
-    this.position = ship.position.subtract(forward.multiply(this.distance));
-    this.position.y -= 50; // Slightly above
+    // Always maintain world up direction
+    const worldUp = new Vector3D(0, 1, 0);
 
-    // Camera looks in same direction as ship
-    this.rotation = ship.rotation.clone();
+    // Calculate right vector
+    const right = forward.cross(worldUp).normalize();
+
+    // Calculate actual up vector perpendicular to forward and right
+    const up = right.cross(forward).normalize();
+
+    // Position camera behind and slightly above the ship
+    const distance = 250;
+    const heightOffset = 40;
+
+    this.position = ship.position
+      .subtract(forward.multiply(distance))
+      .add(up.multiply(heightOffset));
+
+    // Look at the ship
+    const lookDirection = ship.position.subtract(this.position).normalize();
+
+    // Calculate camera rotation to look at ship while maintaining level horizon
+    this.rotation.y = Math.atan2(lookDirection.x, lookDirection.z);
+    this.rotation.x = -Math.asin(lookDirection.y);
+    this.rotation.z = 0; // Always keep camera level
   }
 
-  worldToScreen(worldPos) {
-    // Transform world position to camera space
-    let relativePos = worldPos.subtract(this.position);
+  shake(amount, duration) {
+    this.shakeAmount = amount;
+    this.shakeDuration = duration;
+  }
 
-    // Apply camera rotation (inverse of ship rotation)
+  update(deltaTime) {
+    if (this.shakeDuration > 0) {
+      this.shakeDuration -= deltaTime;
+      this.shakeOffset = new Vector3D(
+        (Math.random() - 0.5) * this.shakeAmount,
+        (Math.random() - 0.5) * this.shakeAmount,
+        0
+      );
+    } else {
+      this.shakeOffset = new Vector3D(0, 0, 0);
+    }
+  }
+
+
+  worldToScreen(worldPos) {
+    // Ensure worldPos is a Vector3D
+    let pos;
+    if (worldPos instanceof Vector3D) {
+      pos = worldPos;
+    } else {
+      pos = new Vector3D(worldPos.x || 0, worldPos.y || 0, worldPos.z || 0);
+    }
+
+    // Transform world position to camera space
+    let relativePos = pos.subtract(this.position);
+
+    // Apply camera rotation
     relativePos = relativePos.rotateY(-this.rotation.y);
     relativePos = relativePos.rotateX(-this.rotation.x);
     relativePos = relativePos.rotateZ(-this.rotation.z);
 
     // Check if behind camera
-    if (relativePos.z <= 0) return null;
+    if (relativePos.z <= 0.1) return null;
 
-    // Project to screen
+    // Project to screen with proper centering
     const scale = this.fov / relativePos.z;
-    const x = relativePos.x * scale + this.canvas.width / 2;
-    const y = relativePos.y * scale + this.canvas.height / 2;
+
+    // Calculate screen position with offset to center the ship
+    const screenCenterX = this.canvas.width / 2;
+    const screenCenterY = this.canvas.height / 2;
+
+    // Offset to place ship in center-lower part of screen
+    const shipScreenOffsetY = 100; // Adjust this to move ship up/down on screen
+
+    const x = relativePos.x * scale + screenCenterX + this.shakeOffset.x;
+    const y = relativePos.y * scale + screenCenterY - shipScreenOffsetY + this.shakeOffset.y;
 
     return { x, y, scale, distance: relativePos.z };
   }

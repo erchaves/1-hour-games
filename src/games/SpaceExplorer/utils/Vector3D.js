@@ -77,6 +77,14 @@ export class Vector3D {
     );
   }
 
+  cross(other) {
+    return new Vector3D(
+      this.y * other.z - this.z * other.y,
+      this.z * other.x - this.x * other.z,
+      this.x * other.y - this.y * other.x
+    );
+  }
+
   clone() {
     return new Vector3D(this.x, this.y, this.z);
   }

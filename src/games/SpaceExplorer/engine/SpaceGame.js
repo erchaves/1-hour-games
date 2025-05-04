@@ -6,6 +6,7 @@ import { Asteroid } from '../entities/Asteroid';
 import { Crystal } from '../entities/Crystal';
 import { Enemy } from '../entities/Enemy';
 import { Wormhole } from '../entities/Wormhole';
+import { Projectile } from '../entities/Projectile';
 import { ParticleSystem } from './ParticleSystem';
 import { CollisionSystem } from './CollisionSystem';
 import { Camera } from './Camera';
@@ -60,7 +61,7 @@ export class SpaceGame {
 
   initializeEntities() {
     // Create starfield
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 30000; i++) {
       this.stars.push(new Star());
     }
 
@@ -68,12 +69,12 @@ export class SpaceGame {
     this.ship.velocity = this.ship.getForwardVector().multiply(this.ship.speed);
 
     // Create planets
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 50; i++) {
       this.planets.push(new Planet());
     }
 
     // Create initial asteroids
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 200; i++) {
       this.asteroids.push(new Asteroid());
     }
 
@@ -150,6 +151,21 @@ export class SpaceGame {
     // Update camera to follow ship
     this.camera.followShip(this.ship);
 
+    // Force ship to stay centered (debug)
+    const shipScreen = this.camera.worldToScreen(this.ship.position);
+    if (shipScreen) {
+      const centerX = this.canvas.width / 2;
+      const centerY = this.canvas.height / 2 + 100; // Offset down slightly
+
+      // If ship drifts too far from center, adjust camera
+      const driftThreshold = 50;
+      if (Math.abs(shipScreen.x - centerX) > driftThreshold ||
+          Math.abs(shipScreen.y - centerY) > driftThreshold) {
+        // Camera needs adjustment
+        this.camera.followShip(this.ship);
+      }
+    }
+
     // Update all entities
     this.stars.forEach(star => star.update(this.ship));
     this.planets.forEach(planet => planet.update(this.ship));
@@ -164,6 +180,7 @@ export class SpaceGame {
 
     // Handle collisions
     this.handleCollisions();
+    this.camera.update(deltaTime);
 
     // Handle ship actions
     if (this.input.fire && this.ship.canFire()) {
@@ -182,9 +199,17 @@ export class SpaceGame {
   }
 
   fireWeapon() {
-    const projectile = this.ship.fireWeapon();
-    if (projectile) {
+    const projectileData = this.ship.fireWeapon();
+    if (projectileData) {
+      // Create a proper Projectile instance from the data
+      const projectile = new Projectile(
+        projectileData.position,
+        projectileData.velocity,
+        projectileData.damage,
+        projectileData.color
+      );
       this.projectiles.push(projectile);
+
       // Add muzzle flash effect
       this.particleSystem.createMuzzleFlash(this.ship.x, this.ship.y, this.ship.z);
     }
@@ -223,11 +248,29 @@ export class SpaceGame {
       }
     });
 
+
+    // Ship vs Planets (gravitational collision)
+    this.planets.forEach(planet => {
+      if (this.collisionSystem.checkCollision(this.ship, planet)) {
+        this.ship.takeDamage(100); // Instant death
+        this.particleSystem.createDamageEffect(this.ship.x, this.ship.y, this.ship.z);
+        this.particleSystem.createExplosion(this.ship.x, this.ship.y, this.ship.z);
+
+        // Bigger screen shake for planet collision
+        this.camera.shake(20, 0.5);
+      }
+    });
+
     // Ship vs Asteroids
     this.asteroids.forEach(asteroid => {
       if (this.collisionSystem.checkCollision(this.ship, asteroid)) {
         this.ship.takeDamage(20);
-        this.particleSystem.createExplosion(asteroid.x, asteroid.y, asteroid.z);
+
+        this.particleSystem.createDamageEffect(this.ship.x, this.ship.y, this.ship.z);
+        this.particleSystem.createExplosion(this.ship.x, this.ship.y, this.ship.z);
+
+        // Screen shake effect
+        this.camera.shake(10, 0.3);
         asteroid.destroy();
       }
     });
@@ -313,11 +356,11 @@ export class SpaceGame {
     this.enemies.forEach(enemy => enemy.render(this.ctx, this.camera));
     this.projectiles.forEach(projectile => projectile.render(this.ctx, this.camera));
 
-    // Render particle effects
-    this.particleSystem.render(this.ctx, this.camera);
-
     // Render ship (if not in first-person view)
     this.ship.render(this.ctx, this.camera);
+
+    // Render particle effects
+    this.particleSystem.render(this.ctx, this.camera);
 
     // Render HUD elements
     this.renderHUD();
@@ -341,7 +384,13 @@ export class SpaceGame {
 
     // Render radar/minimap if enabled
     if (this.input.map) {
-      this.radar.render(this.ctx, this.ship, this.entities);
+      this.radar.render(this.ctx, this.ship, {
+        asteroids: this.asteroids,
+        enemies: this.enemies,
+        crystals: this.crystals,
+        planets: this.planets,
+        wormholes: this.wormholes
+      });
     }
   }
 
@@ -385,5 +434,16 @@ export class SpaceGame {
     if (this.options.onGameOver) {
       this.options.onGameOver(this.score);
     }
+  }
+
+  // Add getter for entities to fix radar
+  get entities() {
+    return {
+      asteroids: this.asteroids,
+      enemies: this.enemies,
+      crystals: this.crystals,
+      planets: this.planets,
+      wormholes: this.wormholes
+    };
   }
 }

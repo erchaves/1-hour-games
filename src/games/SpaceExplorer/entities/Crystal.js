@@ -8,14 +8,15 @@ export class Crystal {
   }
 
   reset() {
-    // Random position in space
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 300 + Math.random() * 2000;
+    // Spawn crystals uniformly in 3D space
+    const phi = Math.acos(2 * Math.random() - 1);
+    const theta = Math.random() * Math.PI * 2;
+    const distance = 500 + Math.random() * 2500;
 
     this.position = new Vector3D(
-      Math.cos(angle) * distance,
-      (Math.random() - 0.5) * 1000,
-      Math.sin(angle) * distance
+      Math.sin(phi) * Math.cos(theta) * distance,
+      Math.cos(phi) * distance,
+      Math.sin(phi) * Math.sin(theta) * distance
     );
 
     this.rotation = 0;

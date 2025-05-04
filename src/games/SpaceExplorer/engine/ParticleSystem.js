@@ -1,4 +1,6 @@
 // src/games/SpaceExplorer/engine/ParticleSystem.js
+import { Vector3D } from '../utils/Vector3D';
+
 export class ParticleSystem {
   constructor() {
     this.particles = [];
@@ -106,6 +108,49 @@ export class ParticleSystem {
     }
   }
 
+  createDamageEffect(x, y, z) {
+    // Sparks and debris - smaller, faster, longer-lasting
+    for (let i = 0; i < 30; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 100 + Math.random() * 200; // Random speed between 100-300
+      const elevation = (Math.random() - 0.3) * Math.PI; // Bias upward
+      const forwardBias = 50;
+
+      this.particles.push({
+        x, y, z,
+        vx: Math.cos(angle) * Math.cos(elevation) * speed,
+        vy: Math.sin(elevation) * speed + Math.random() * 50, // Bias upward
+        vz: Math.sin(angle) * Math.cos(elevation) * speed + forwardBias, // Add forward bias
+        life: 0.8 + Math.random() * 0.4,
+        maxLife: 0.8 + Math.random() * 0.4,
+        color: Math.random() > 0.5 ? '#ff8800' : '#ffff00',
+        size: Math.random() * 1.5 + 0.5,
+        drag: 0.97
+      });
+
+    }
+
+    // Shield flicker effect
+    for (let i = 0; i < 10; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 30 + Math.random() * 20;
+
+      this.particles.push({
+        x: x + Math.cos(angle) * radius,
+        y: y + Math.sin(angle) * radius * 0.5, // Flatter distribution
+        z: z + Math.sin(angle) * radius,
+        vx: Math.cos(angle) * 50,
+        vy: Math.random() * 30, // Mostly upward
+        vz: Math.sin(angle) * 50 + 20, // Slight forward bias
+        life: 0.4,
+        maxLife: 0.4,
+        color: '#00ffff',
+        size: 2,
+        drag: 0.95
+      });
+    }
+  }
+
   render(ctx, camera) {
     this.particles.forEach(particle => {
       const screen = camera.worldToScreen({
@@ -117,9 +162,17 @@ export class ParticleSystem {
       if (!screen) return;
 
       const alpha = particle.life / particle.maxLife;
-      ctx.fillStyle = particle.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+      const alphaHex = Math.floor(Math.max(0, Math.min(1, alpha)) * 255).toString(16).padStart(2, '0');
+
+      ctx.fillStyle = particle.color + alphaHex;
+
+      // Scale particle size with distance more naturally
+      const scaledSize = particle.size * screen.scale * 0.5; // Reduced scale factor
+      const minSize = 0.5;
+      const renderSize = Math.max(minSize, scaledSize);
+
       ctx.beginPath();
-      ctx.arc(screen.x, screen.y, particle.size * screen.scale, 0, Math.PI * 2);
+      ctx.arc(screen.x, screen.y, renderSize, 0, Math.PI * 2);
       ctx.fill();
     });
   }

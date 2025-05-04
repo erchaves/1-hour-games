@@ -9,31 +9,34 @@ export class Enemy {
   }
 
   reset() {
-    // Spawn at random position
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 500 + Math.random() * 1500;
+    // Spawn enemies in a spherical distribution
+    const phi = Math.acos(2 * Math.random() - 1);
+    const theta = Math.random() * Math.PI * 2;
+    const distance = 800 + Math.random() * 2000;
 
     this.position = new Vector3D(
-      Math.cos(angle) * distance,
-      (Math.random() - 0.5) * 500,
-      Math.sin(angle) * distance
+      Math.sin(phi) * Math.cos(theta) * distance,
+      Math.cos(phi) * distance,
+      Math.sin(phi) * Math.sin(theta) * distance
     );
 
     this.velocity = new Vector3D(0, 0, 0);
     this.rotation = new Vector3D(0, 0, 0);
 
+    // Rest of the properties stay the same...
     this.health = 50;
     this.maxHealth = 50;
     this.speed = 8;
     this.aggroRange = 800;
     this.attackRange = 400;
-    this.fireRate = 1; // seconds between shots
+    this.fireRate = 1;
     this.lastFireTime = 0;
     this.damage = 15;
-    this.value = 100; // Points for destroying
+    this.value = 100;
 
     this.type = this.generateType();
     this.color = this.getColorForType();
+    this.radius = 20; // Add radius for collision detection
   }
 
   generateType() {

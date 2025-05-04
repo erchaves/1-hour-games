@@ -7,14 +7,15 @@ export class Planet {
   }
 
   reset() {
-    // Random position in space
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 2000 + Math.random() * 3000;
+    // Spawn planets in a spherical distribution
+    const phi = Math.acos(2 * Math.random() - 1);
+    const theta = Math.random() * Math.PI * 2;
+    const distance = 3000 + Math.random() * 5000; // Planets are farther away
 
     this.position = new Vector3D(
-      Math.cos(angle) * distance,
-      (Math.random() - 0.5) * 1000,
-      Math.sin(angle) * distance
+      Math.sin(phi) * Math.cos(theta) * distance,
+      Math.cos(phi) * distance,
+      Math.sin(phi) * Math.sin(theta) * distance
     );
 
     this.radius = 100 + Math.random() * 200;

@@ -8,25 +8,29 @@ export class Asteroid {
   }
 
   reset() {
-    // Spawn asteroids in a belt around the play area
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 1000 + Math.random() * 2000;
-    const height = (Math.random() - 0.5) * 500;
+    // Spawn asteroids more evenly distributed in 3D space
+    const phi = Math.acos(2 * Math.random() - 1); // 0 to PI for spherical distribution
+    const theta = Math.random() * Math.PI * 2; // 0 to 2*PI
+    const distance = 1000 + Math.random() * 3000; // Vary the distance more
 
     this.position = new Vector3D(
-      Math.cos(angle) * distance,
-      height,
-      Math.sin(angle) * distance
+      Math.sin(phi) * Math.cos(theta) * distance,
+      Math.cos(phi) * distance,
+      Math.sin(phi) * Math.sin(theta) * distance
     );
 
-    // Random velocity
+    // Random velocity in any direction
+    const velPhi = Math.acos(2 * Math.random() - 1);
+    const velTheta = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 50;
+
     this.velocity = new Vector3D(
-      (Math.random() - 0.5) * 2,
-      (Math.random() - 0.5) * 2,
-      (Math.random() - 0.5) * 2
+      Math.sin(velPhi) * Math.cos(velTheta) * speed,
+      Math.cos(velPhi) * speed,
+      Math.sin(velPhi) * Math.sin(velTheta) * speed
     );
 
-    // Random rotation
+    // Rest of the reset code stays the same...
     this.rotation = new Vector3D(
       Math.random() * Math.PI * 2,
       Math.random() * Math.PI * 2,
@@ -40,7 +44,7 @@ export class Asteroid {
     );
 
     this.radius = 20 + Math.random() * 40;
-    this.health = this.radius; // Bigger asteroids have more health
+    this.health = this.radius;
     this.vertices = this.generateVertices();
   }
 

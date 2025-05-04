@@ -13,13 +13,15 @@ export class Wormhole {
   }
 
   generatePosition() {
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 1000 + Math.random() * 3000;
+    // Use spherical distribution for wormholes too
+    const phi = Math.acos(2 * Math.random() - 1);
+    const theta = Math.random() * Math.PI * 2;
+    const distance = 2000 + Math.random() * 4000;
 
     return new Vector3D(
-      Math.cos(angle) * distance,
-      (Math.random() - 0.5) * 1000,
-      Math.sin(angle) * distance
+      Math.sin(phi) * Math.cos(theta) * distance,
+      Math.cos(phi) * distance,
+      Math.sin(phi) * Math.sin(theta) * distance
     );
   }
 
