@@ -64,6 +64,9 @@ export class SpaceGame {
       this.stars.push(new Star());
     }
 
+    // Make sure ship has initial forward velocity
+    this.ship.velocity = this.ship.getForwardVector().multiply(this.ship.speed);
+
     // Create planets
     for (let i = 0; i < 5; i++) {
       this.planets.push(new Planet());

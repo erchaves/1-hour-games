@@ -1,140 +1,133 @@
 // src/games/SpaceExplorer/engine/Ship.js
 import { Vector3D } from '../utils/Vector3D';
-import { Projectile } from '../entities/Projectile';
 
 export class Ship {
   constructor() {
     this.position = new Vector3D(0, 0, 0);
-    this.velocity = new Vector3D(0, 0, 0);
     this.rotation = new Vector3D(0, 0, 0); // pitch, yaw, roll
+    this.velocity = new Vector3D(0, 0, 0);
 
     // Ship properties
+    this.speed = 400; // Base forward speed
+    this.turnSpeed = 0.02;
+    this.radius = 20;
+
+    // Visual ship rotation for banking effect
+    this.visualRotation = new Vector3D(0, 0, 0);
+    this.maxVisualTilt = Math.PI / 4; // 45 degrees
+
+    // Health/shields
     this.health = 100;
     this.shields = 100;
     this.fuel = 100;
-    this.maxSpeed = 15;
-    this.minSpeed = 2;
-    this.acceleration = 5;
-    this.turnSpeed = 0.05;
-
-    // Weapon properties
-    this.weaponCooldown = 0;
-    this.weaponFireRate = 0.2; // seconds between shots
-    this.weaponDamage = 10;
-
-    // Warp properties
-    this.warpCooldown = 0;
-    this.warpCooldownTime = 5;
-    this.warpFuelCost = 20;
   }
 
   update(input, deltaTime) {
-    // Handle rotation
+    // Handle rotation based on input
+    let targetVisualRoll = 0;
+    let targetVisualPitch = 0;
+
     if (input.left) {
       this.rotation.y -= this.turnSpeed;
-      this.rotation.z = Math.max(this.rotation.z - this.turnSpeed, -0.5);
-    } else if (input.right) {
-      this.rotation.y += this.turnSpeed;
-      this.rotation.z = Math.min(this.rotation.z + this.turnSpeed, 0.5);
-    } else {
-      this.rotation.z *= 0.9; // Auto-level
+      targetVisualRoll = -this.maxVisualTilt * 0.5;
     }
-
+    if (input.right) {
+      this.rotation.y += this.turnSpeed;
+      targetVisualRoll = this.maxVisualTilt * 0.5;
+    }
     if (input.up) {
       this.rotation.x -= this.turnSpeed;
-    } else if (input.down) {
-      this.rotation.x += this.turnSpeed;
+      targetVisualPitch = -this.maxVisualTilt * 0.3;
     }
+    if (input.down) {
+      this.rotation.x += this.turnSpeed;
+      targetVisualPitch = this.maxVisualTilt * 0.3;
+    }
+
+    // Smooth visual rotation
+    this.visualRotation.z += (targetVisualRoll - this.visualRotation.z) * 0.1;
+    this.visualRotation.x += (targetVisualPitch - this.visualRotation.x) * 0.1;
 
     // Calculate forward vector
     const forward = this.getForwardVector();
 
-    // Handle thrust
-    let speed = this.velocity.magnitude();
-
-    if (input.boost && this.fuel > 0) {
-      speed = Math.min(speed + this.acceleration * deltaTime, this.maxSpeed);
-      this.fuel = Math.max(0, this.fuel - 10 * deltaTime);
-    } else if (input.brake) {
-      speed = Math.max(speed - this.acceleration * deltaTime, this.minSpeed);
-    } else {
-      // Maintain current speed with slight decay
-      speed = Math.max(speed * 0.99, this.minSpeed);
-    }
-
     // Update velocity
-    this.velocity = forward.multiply(speed);
+    this.velocity = forward.multiply(this.speed);
 
     // Update position
     this.position = this.position.add(this.velocity.multiply(deltaTime));
 
-    // Update cooldowns
-    this.weaponCooldown = Math.max(0, this.weaponCooldown - deltaTime);
-    this.warpCooldown = Math.max(0, this.warpCooldown - deltaTime);
-
-    // Regenerate shields slowly
+    // Regenerate shields
     this.shields = Math.min(100, this.shields + 5 * deltaTime);
   }
 
   getForwardVector() {
-    return new Vector3D(0, 0, 1)
-      .rotateX(this.rotation.x)
-      .rotateY(this.rotation.y);
+    // Start with forward direction (0, 0, 1)
+    let forward = new Vector3D(0, 0, 1);
+
+    // Apply rotations
+    forward = forward.rotateX(this.rotation.x);
+    forward = forward.rotateY(this.rotation.y);
+
+    return forward;
   }
 
-  canFire() {
-    return this.weaponCooldown <= 0;
-  }
+  render(ctx, camera) {
+    // Ship vertices for rendering
+    const vertices = [
+      new Vector3D(0, 0, 25),         // Front
+      new Vector3D(-20, 0, -25),      // Back left
+      new Vector3D(20, 0, -25),       // Back right
+      new Vector3D(0, -10, 0)         // Top center
+    ];
 
-  fireWeapon() {
-    if (!this.canFire()) return null;
+    // Transform vertices with visual rotation
+    const transformedVertices = vertices.map(v => {
+      let transformed = v.rotateX(this.rotation.x + this.visualRotation.x)
+                        .rotateY(this.rotation.y)
+                        .rotateZ(this.rotation.z + this.visualRotation.z);
+      return transformed.add(this.position);
+    });
 
-    this.weaponCooldown = this.weaponFireRate;
+    // Project vertices to screen
+    const screenVertices = transformedVertices.map(v => camera.worldToScreen(v));
 
-    const forward = this.getForwardVector();
-    const projectilePos = this.position.add(forward.multiply(50)); // Spawn ahead of ship
-    const projectileVel = forward.multiply(30).add(this.velocity); // Inherit ship velocity
+    // Skip rendering if behind camera
+    if (screenVertices.some(v => v === null)) return;
 
-    return new Projectile(projectilePos, projectileVel, this.weaponDamage);
-  }
+    ctx.save();
 
-  canWarp() {
-    return this.warpCooldown <= 0 && this.fuel >= this.warpFuelCost;
-  }
+    // Draw ship body
+    ctx.fillStyle = '#4488ff';
+    ctx.strokeStyle = '#88ccff';
+    ctx.lineWidth = 2;
 
-  enterWormhole(wormhole) {
-    this.fuel -= this.warpFuelCost;
-    this.warpCooldown = this.warpCooldownTime;
+    // Main triangle
+    ctx.beginPath();
+    ctx.moveTo(screenVertices[0].x, screenVertices[0].y);
+    ctx.lineTo(screenVertices[1].x, screenVertices[1].y);
+    ctx.lineTo(screenVertices[2].x, screenVertices[2].y);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
 
-    // Teleport to wormhole exit
-    const exitPosition = wormhole.getExitPosition();
-    this.position = exitPosition;
+    // Cockpit
+    ctx.fillStyle = '#66aaff';
+    ctx.beginPath();
+    ctx.moveTo(screenVertices[0].x, screenVertices[0].y);
+    ctx.lineTo(screenVertices[3].x, screenVertices[3].y);
+    ctx.lineTo(screenVertices[1].x, screenVertices[1].y);
+    ctx.closePath();
+    ctx.fill();
 
-    // Add some random velocity at exit
-    this.velocity = new Vector3D(
-      (Math.random() - 0.5) * 10,
-      (Math.random() - 0.5) * 10,
-      (Math.random() - 0.5) * 10
-    );
-  }
+    ctx.beginPath();
+    ctx.moveTo(screenVertices[0].x, screenVertices[0].y);
+    ctx.lineTo(screenVertices[3].x, screenVertices[3].y);
+    ctx.lineTo(screenVertices[2].x, screenVertices[2].y);
+    ctx.closePath();
+    ctx.fill();
 
-  takeDamage(amount) {
-    if (this.shields > 0) {
-      const shieldDamage = Math.min(amount, this.shields);
-      this.shields -= shieldDamage;
-      amount -= shieldDamage;
-    }
-
-    this.health -= amount;
-  }
-
-  respawn() {
-    this.position = new Vector3D(0, 0, 0);
-    this.velocity = new Vector3D(0, 0, 5);
-    this.rotation = new Vector3D(0, 0, 0);
-    this.health = 100;
-    this.shields = 100;
-    this.fuel = 100;
+    ctx.restore();
   }
 
   get x() { return this.position.x; }

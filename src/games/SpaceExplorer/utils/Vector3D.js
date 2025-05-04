@@ -30,38 +30,21 @@ export class Vector3D {
     );
   }
 
-  divide(scalar) {
-    return new Vector3D(
-      this.x / scalar,
-      this.y / scalar,
-      this.z / scalar
-    );
-  }
-
   magnitude() {
     return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
   }
 
   normalize() {
     const mag = this.magnitude();
-    if (mag === 0) return new Vector3D();
-    return this.divide(mag);
+    if (mag === 0) return new Vector3D(0, 0, 0);
+    return this.multiply(1 / mag);
   }
 
   distanceTo(other) {
-    return this.subtract(other).magnitude();
-  }
-
-  dot(other) {
-    return this.x * other.x + this.y * other.y + this.z * other.z;
-  }
-
-  cross(other) {
-    return new Vector3D(
-      this.y * other.z - this.z * other.y,
-      this.z * other.x - this.x * other.z,
-      this.x * other.y - this.y * other.x
-    );
+    const dx = this.x - other.x;
+    const dy = this.y - other.y;
+    const dz = this.z - other.z;
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
   }
 
   rotateX(angle) {

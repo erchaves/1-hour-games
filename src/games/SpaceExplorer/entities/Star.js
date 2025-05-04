@@ -38,7 +38,10 @@ export class Star {
   update(ship) {
     // Stars are mostly static, but we can add a subtle parallax effect
     // or respawn far stars
-    const distance = this.position.distanceTo(ship.position);
+    const dx = this.position.x - ship.position.x;
+    const dy = this.position.y - ship.position.y;
+    const dz = this.position.z - ship.position.z;
+    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
     // If star is too far from ship, respawn it
     if (distance > 8000) {
