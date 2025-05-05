@@ -30,16 +30,27 @@ export class Camera {
     const distance = 250;
     const heightOffset = 40;
 
-    this.position = ship.position
+    // Calculate target camera position
+    const targetPosition = ship.position
       .subtract(forward.multiply(distance))
       .add(up.multiply(heightOffset));
+
+    // Smoothly interpolate camera position to reduce jitter
+    const smoothFactor = 0.1;
+    this.position = this.position.add(
+      targetPosition.subtract(this.position).multiply(smoothFactor)
+    );
 
     // Look at the ship
     const lookDirection = ship.position.subtract(this.position).normalize();
 
-    // Calculate camera rotation to look at ship while maintaining level horizon
-    this.rotation.y = Math.atan2(lookDirection.x, lookDirection.z);
-    this.rotation.x = -Math.asin(lookDirection.y);
+    // Calculate target camera rotation
+    const targetRotationY = Math.atan2(lookDirection.x, lookDirection.z);
+    const targetRotationX = -Math.asin(lookDirection.y);
+
+    // Smoothly interpolate camera rotation
+    this.rotation.y += (targetRotationY - this.rotation.y) * smoothFactor;
+    this.rotation.x += (targetRotationX - this.rotation.x) * smoothFactor;
     this.rotation.z = 0; // Always keep camera level
   }
 

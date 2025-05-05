@@ -79,7 +79,7 @@ export class SpaceGame {
     }
 
     // Create crystals
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 1000; i++) {
       this.crystals.push(new Crystal());
     }
 
