@@ -1,21 +1,25 @@
-# YOUR PROJECT
+# Claude AI Web App
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/erchaves/1-hour-games/tree/stackblitz-initial-setup)
+A React web application that uses the Claude API to deliver AI-generated content to users.
 
-Project Description
+## Features
 
-## 🚀 Quick Start
+- Chat interface with Claude AI
+- Seamless message sending and receiving
+- Responsive design for all devices
+- Loading indicators and error handling
 
-### Open in StackBlitz
+## Prerequisites
 
-Click the button above to instantly run this project in your browser with StackBlitz!
+- Node.js (v14 or higher)
+- An Anthropic API key for Claude
 
-### Local Development
+## Setup Instructions
 
-1. Clone the repository:
+1. Clone this repository:
 ```bash
-git clone https://github.com/erchaves/1-hour-games/tree/stackblitz-initial-setup.git
-cd 1-hour-games
+git clone https://github.com/yourusername/claude-web-app.git
+cd claude-web-app
 ```
 
 2. Install dependencies:
@@ -23,28 +27,54 @@ cd 1-hour-games
 npm install
 ```
 
-3. Start the development server:
+3. Create a `.env` file in the root directory based on `.env.example`:
+```bash
+cp .env.example .env
+```
+
+4. Add your Claude API key to the `.env` file:
+```
+VITE_CLAUDE_API_KEY=your_api_key_here
+```
+
+5. Start the development server:
 ```bash
 npm run dev
 ```
 
-4. Open your browser to `http://localhost:5173`
+6. Open your browser and navigate to `http://localhost:3000`
 
-## 📁 Project Structure
+## Production Build
 
+To create a production build:
 
-## 🛠️ Technologies Used
-- **Frontend**: React, Tailwind CSS
-- **Build Tool**: Vite
+```bash
+npm run build
+```
 
-## 🤝 Contributing
+The build files will be in the `dist` directory and can be served using any static file server.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Security Considerations
 
-## 📝 License
+**Important**: This demo app directly communicates with the Claude API from the client side. For a production application, you should:
 
-This project is licensed under the MIT License.
+1. Create a backend service to handle API requests
+2. Never expose your API key in client-side code
+3. Implement proper authentication and rate limiting
+
+## Project Structure
+
+- `src/pages`: Main application pages (Home, Chat)
+- `src/components`: Reusable UI components
+- `src/services`: API integration services
+- `src/hooks`: Custom React hooks
+- `src/utils`: Utility functions
+
+## Technologies Used
+
+- React
+- Vite
+- React Router
+- Styled Components
+- Axios
+- 
