@@ -60,36 +60,36 @@ const HomePage = () => {
 const HomeContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 ${({ theme }) => theme.spacing.md};
 `;
 
 const Header = styled.header`
-  background-color: #6750A4;
-  color: white;
-  padding: 30px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  padding: ${({ theme }) => theme.spacing.xl};
   text-align: center;
-  border-radius: 0 0 12px 12px;
-  margin-bottom: 40px;
+  border-radius: 0 0 ${({ theme }) => theme.borderRadius.large} ${({ theme }) => theme.borderRadius.large};
+  margin-bottom: ${({ theme }) => theme.spacing.xxl};
 
   h1 {
     margin: 0;
-    font-size: 2.5rem;
+    font-size: ${({ theme }) => theme.fontSizes.xxxlarge};
   }
 `;
 
 const HeroSection = styled.section`
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: ${({ theme }) => theme.spacing.xxxl};
 
   h2 {
-    font-size: 2rem;
-    color: #1D1B20;
-    margin-bottom: 16px;
+    font-size: ${({ theme }) => theme.fontSizes.xxlarge};
+    color: ${({ theme }) => theme.colors.text};
+    margin-bottom: ${({ theme }) => theme.spacing.md};
   }
 
   p {
-    font-size: 1.2rem;
-    color: #49454F;
+    font-size: ${({ theme }) => theme.fontSizes.medium};
+    color: ${({ theme }) => theme.colors.textSecondary};
     max-width: 600px;
     margin: 0 auto;
     line-height: 1.5;
@@ -97,12 +97,12 @@ const HeroSection = styled.section`
 `;
 
 const FeaturesSection = styled.section`
-  margin-bottom: 60px;
+  margin-bottom: ${({ theme }) => theme.spacing.xxxl};
 
   h3 {
-    font-size: 1.8rem;
-    color: #1D1B20;
-    margin-bottom: 30px;
+    font-size: ${({ theme }) => theme.fontSizes.xlarge};
+    color: ${({ theme }) => theme.colors.text};
+    margin-bottom: ${({ theme }) => theme.spacing.xl};
     text-align: center;
   }
 `;
@@ -110,53 +110,53 @@ const FeaturesSection = styled.section`
 const FeatureGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  gap: ${({ theme }) => theme.spacing.md};
 `;
 
 const FeatureCard = styled.div`
-  background-color: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: ${({ theme }) => theme.colors.white};
+  border-radius: ${({ theme }) => theme.borderRadius.large};
+  padding: ${({ theme }) => theme.spacing.lg};
+  box-shadow: ${({ theme }) => theme.shadows.medium};
   transition: transform 0.2s, box-shadow 0.2s;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: ${({ theme }) => theme.shadows.large};
   }
 `;
 
 const FeatureTitle = styled.h4`
-  font-size: 1.4rem;
-  color: #6750A4;
+  font-size: ${({ theme }) => theme.fontSizes.large};
+  color: ${({ theme }) => theme.colors.primary};
   margin-top: 0;
-  margin-bottom: 12px;
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
 `;
 
 const FeatureDescription = styled.p`
-  color: #49454F;
+  color: ${({ theme }) => theme.colors.textSecondary};
   line-height: 1.5;
   margin: 0;
 `;
 
 const CTASection = styled.section`
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: ${({ theme }) => theme.spacing.xxxl};
 `;
 
 const StartButton = styled(Link)`
   display: inline-block;
-  background-color: #6750A4;
-  color: white;
-  font-size: 1.2rem;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.fontSizes.medium};
   font-weight: bold;
   text-decoration: none;
-  padding: 16px 40px;
-  border-radius: 30px;
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.xxl};
+  border-radius: ${({ theme }) => theme.borderRadius.xxl};
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #5D4599;
+    background-color: ${({ theme }) => theme.colors.primaryDark};
   }
 `;
 

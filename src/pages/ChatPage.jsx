@@ -86,84 +86,88 @@ const ChatContainer = styled.div`
 `;
 
 const ChatHeader = styled.header`
-  background-color: #6750A4;
-  color: white;
-  padding: 16px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+  padding: ${({ theme }) => theme.spacing.md};
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: ${({ theme }) => theme.shadows.small};
 
   h1 {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: ${({ theme }) => theme.fontSizes.large};
   }
 `;
 
 const MessagesContainer = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: ${({ theme }) => theme.spacing.lg};
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: ${({ theme }) => theme.spacing.sm};
 `;
 
 const WelcomeMessage = styled.div`
   text-align: center;
   margin: auto;
   max-width: 600px;
-  padding: 24px;
-  background-color: #f5f5f5;
-  border-radius: 12px;
+  padding: ${({ theme }) => theme.spacing.lg};
+  background-color: ${({ theme }) => theme.colors.background};
+  border-radius: ${({ theme }) => theme.borderRadius.large};
 
   h2 {
-    color: #6750A4;
+    color: ${({ theme }) => theme.colors.primary};
     margin-top: 0;
   }
 
   p {
-    color: #333;
+    color: ${({ theme }) => theme.colors.text};
     line-height: 1.5;
   }
 `;
 
 const MessageBubble = styled.div`
   max-width: 80%;
-  padding: 12px 16px;
-  border-radius: 18px;
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
   margin-left: ${(props) => (props.$isUser ? 'auto' : '0')};
   margin-right: ${(props) => (props.$isUser ? '0' : 'auto')};
-  background-color: ${(props) => (props.$isUser ? '#6750A4' : '#E6E0E9')};
+  background-color: ${(props) => (props.$isUser
+    ? props.theme.colors.primary
+    : props.theme.colors.primaryLight)};
 `;
 
 const MessageText = styled.p`
   margin: 0;
-  color: ${(props) => (props.$isUser ? 'white' : '#333')};
+  color: ${(props) => (props.$isUser
+    ? props.theme.colors.white
+    : props.theme.colors.text)};
   line-height: 1.4;
   white-space: pre-wrap;
 `;
 
 const ErrorMessage = styled.div`
-  color: #e53935;
+  color: ${({ theme }) => theme.colors.error};
   text-align: center;
-  margin: 10px 0;
-  padding: 10px;
-  background-color: #ffebee;
-  border-radius: 8px;
+  margin: ${({ theme }) => theme.spacing.sm} 0;
+  padding: ${({ theme }) => theme.spacing.sm};
+  background-color: ${({ theme }) => theme.colors.errorLight};
+  border-radius: ${({ theme }) => theme.borderRadius.medium};
 `;
 
 const InputForm = styled.form`
   display: flex;
-  padding: 16px;
-  background-color: white;
+  padding: ${({ theme }) => theme.spacing.md};
+  background-color: ${({ theme }) => theme.colors.white};
   border-top: 1px solid #eee;
 `;
 
 const MessageInput = styled.textarea`
   flex: 1;
-  padding: 12px 16px;
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
   border: 1px solid #ccc;
-  border-radius: 24px;
-  font-size: 16px;
+  border-radius: ${({ theme }) => theme.borderRadius.xxl};
+  font-size: ${({ theme }) => theme.fontSizes.regular};
   resize: none;
   min-height: 24px;
   max-height: 120px;
@@ -171,28 +175,25 @@ const MessageInput = styled.textarea`
   font-family: inherit;
 
   &:focus {
-    border-color: #6750A4;
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
 const SendButton = styled.button`
-  background-color: #6750A4;
-  color: white;
+  background-color: ${(props) => props.disabled
+    ? props.theme.colors.disabled
+    : props.theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
   border: none;
-  border-radius: 24px;
-  padding: 0 20px;
-  margin-left: 10px;
+  border-radius: ${({ theme }) => theme.borderRadius.xxl};
+  padding: 0 ${({ theme }) => theme.spacing.lg};
+  margin-left: ${({ theme }) => theme.spacing.sm};
   font-weight: bold;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   transition: background-color 0.2s;
 
   &:hover:not(:disabled) {
-    background-color: #5D4599;
-  }
-
-  &:disabled {
-    background-color: #C4C4C4;
-    cursor: not-allowed;
+    background-color: ${({ theme }) => theme.colors.primaryDark};
   }
 `;
 
@@ -205,14 +206,14 @@ const LoadingIndicator = styled.div`
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.7);
-  padding: 10px 20px;
-  border-radius: 20px;
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.lg};
+  border-radius: ${({ theme }) => theme.borderRadius.xxl};
 
   .dot {
     width: 8px;
     height: 8px;
-    background-color: white;
-    border-radius: 50%;
+    background-color: ${({ theme }) => theme.colors.white};
+    border-radius: ${({ theme }) => theme.borderRadius.round};
     animation: bounce 1.4s infinite ease-in-out both;
   }
 
