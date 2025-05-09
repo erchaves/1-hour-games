@@ -19,6 +19,13 @@ const GameMenu = () => {
       icon: '🚀'
     },
     {
+      id: 'tictactoe',
+      title: 'Tic Tac Toe',
+      description: `Play Tic Tac Toe against Claude.ai`,
+      color: 'from-indigo-600 to-purple-600',
+      icon: '#️'
+    },
+    {
       id: 'snake',
       title: 'Snake',
       description: 'Eat food and avoid poison',

@@ -7,6 +7,7 @@ import Snake from './games/Snake';
 import Pong from './games/Pong';
 import Breakout from './games/Breakout';
 import SpaceExplorer from './games/SpaceExplorer';
+import TicTacToe from './games/TicTacToe';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<GameMenu />} />
           <Route path="/games/3-body" element={<ThreeBody />} />
+          <Route path="/games/TicTacToe" element={<TicTacToe />} />
           <Route path="/games/snake" element={<Snake />} />
           <Route path="/games/pong" element={<Pong />} />
           <Route path="/games/breakout" element={<Breakout />} />
