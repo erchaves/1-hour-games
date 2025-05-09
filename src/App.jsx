@@ -11,7 +11,7 @@ import TicTacToe from './games/TicTacToe';
 
 function App() {
   return (
-    <Router basename="/1-hour-games">
+    <Router>
       <div className="min-h-screen bg-gray-900">
         <Routes>
           <Route path="/" element={<GameMenu />} />

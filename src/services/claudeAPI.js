@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Create axios instance pointing to our proxy server instead
 const claudeClient = axios.create({
-  baseURL: 'http://localhost:3001/api', // Your proxy server address
+  baseURL: '/api', // Using relative URL for deployment
   headers: {
     'Content-Type': 'application/json',
   },

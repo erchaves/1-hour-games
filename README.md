@@ -1,5 +1,6 @@
 # 1-Hour Games - Arcade Collection
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ferchaves%2F1-hour-games)
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/erchaves/1-hour-games)
 
 A collection of classic arcade games built with React and Tailwind CSS. Each game is designed to be built in about an hour!
@@ -42,7 +43,7 @@ PORT=3001
 npm start
 ```
 
-This will start both the frontend (Vite) and backend (Express) servers concurrently.
+This will start both the frontend (Vite) and backend (Express) servers concurrently. The Vite server is configured to proxy API requests to the Express server during development.
 
 ## 📁 Project Structure
 
@@ -160,3 +161,9 @@ vercel
    - Go to your project settings
    - Add the following environment variables:
      - `ANTHROPIC_API_KEY`: Your Anthropic API key
+
+The project is configured to work with Vercel's serverless functions:
+- The frontend is built as a static site
+- The Express server runs as a serverless function
+- API routes (/api/*) are automatically directed to the server
+- No base path prefix is needed in the URL
