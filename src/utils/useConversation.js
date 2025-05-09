@@ -1,6 +1,6 @@
 // src/hooks/useConversation.js
 import { useState, useCallback, useEffect } from 'react';
-import { sendMessageToClaude } from '../services/claudeAPI';
+import axios from 'axios';
 
 // Get conversation from localStorage if available
 const getStoredConversation = () => {
@@ -35,7 +35,7 @@ export const useConversation = () => {
     }));
   }, []);
 
-  // Send message to Claude API
+  // Send message to Claude API through our Express server
   const sendMessage = useCallback(
     async (text) => {
       if (!text.trim()) return;
@@ -57,13 +57,15 @@ export const useConversation = () => {
         // Format all messages for the API
         const formattedMessages = formatMessagesForApi([...messages, userMessage]);
 
-        // Send to Claude API
-        const response = await sendMessageToClaude(formattedMessages);
+        // Send to our Express server
+        const response = await axios.post('/api/claude', {
+          messages: formattedMessages,
+        });
 
         // Create a new assistant message from the response
         const assistantMessage = {
           id: (Date.now() + 1).toString(),
-          text: response[0].text,
+          text: response.data.text,
           sender: 'assistant',
           timestamp: new Date(),
         };
