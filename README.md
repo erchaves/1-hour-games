@@ -1,5 +1,6 @@
 # 1-Hour Games - Arcade Collection
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ferchaves%2F1-hour-games)
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/erchaves/1-hour-games)
 
 A collection of classic arcade games built with React and Tailwind CSS. Each game is designed to be built in about an hour!
@@ -31,12 +32,18 @@ cd 1-hour-games
 npm install
 ```
 
-3. Start the development server:
-```bash
-npm run dev
+3. Create a `.env` file in the root directory with your Anthropic API key:
+```
+ANTHROPIC_API_KEY=your_api_key_here
+PORT=3001
 ```
 
-4. Open your browser to `http://localhost:5173`
+4. Start the development server:
+```bash
+npm start
+```
+
+This will start both the frontend (Vite) and backend (Express) servers concurrently. The Vite server is configured to proxy API requests to the Express server during development.
 
 ## 📁 Project Structure
 
@@ -48,6 +55,8 @@ npm run dev
 │   ├── utils/         # Game engine and utilities
 │   ├── App.jsx
 │   └── main.jsx
+├── server/
+│   └── index.js
 ├── public/
 └── ...
 ```
@@ -65,6 +74,8 @@ npm run dev
 - **Build Tool**: Vite
 - **State Management**: Zustand
 - **Routing**: React Router
+- **Backend**: Express
+- **AI**: Claude API
 
 ## 🎨 Shared Modules
 
@@ -128,3 +139,31 @@ This project is licensed under the MIT License.
 ---
 
 **Ready to play? [Open in StackBlitz](https://stackblitz.com/github/erchaves/1-hour-games) and start gaming!** 🎮
+
+## Deployment to Vercel
+
+1. Install the Vercel CLI:
+```bash
+npm install -g vercel
+```
+
+2. Login to Vercel:
+```bash
+vercel login
+```
+
+3. Deploy to Vercel:
+```bash
+vercel
+```
+
+4. Set up environment variables in the Vercel dashboard:
+   - Go to your project settings
+   - Add the following environment variables:
+     - `ANTHROPIC_API_KEY`: Your Anthropic API key
+
+The project is configured to work with Vercel's serverless functions:
+- The frontend is built as a static site
+- The Express server runs as a serverless function
+- API routes (/api/*) are automatically directed to the server
+- No base path prefix is needed in the URL
