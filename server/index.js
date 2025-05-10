@@ -47,13 +47,32 @@ app.post('/api/claude', async (req, res) => {
 app.post('/api/tictactoe', async (req, res) => {
   try {
     const { messages } = req.body;
+    const boardConfig = messages[0].content;
 
-    const systemPrompt = `Considering a game board of tic-tac-toe.  It's your move, you're X.  The message describes the current game board where each character's index represents the spot on the board like this with these arrays stacked vertically: [0,1,2],[3,4,5],[6,7,8]. Please respond without any words. Respond only with the coordinate of the move using the index between 0 and 9 to represent the spot on the board. Desired format: Single number.  Example: "0" (top left corner) or "4" (middle square)`;
+    console.log(boardConfig);
+
+    const systemPrompt = [
+      `You are playing TicTacToe as X against a human player (O). Follow these strategic rules in order:`,
+      `1. Always take the center if it's available`,
+      `2. If the opponent has two in a row, block them`,
+      `3. If you can win in one move, take that move`,
+      `4. If the opponent has a corner, take the opposite corner`,
+      `5. Take any available corner`,
+      `6. Take any available edge`,
+      ``,
+      `The current board state is (from top-left to bottom-right): ` + boardConfig,
+      `Each position is represented by its index (0-8) where:`,
+      `0 1 2`,
+      `3 4 5`,
+      `6 7 8`,
+      ``,
+      `Respond ONLY with the number of the position you want to move to (0-8). No other text.`
+    ].join('\n');
 
     const response = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-latest',
-      max_tokens: 500,
-      temperature: 1,
+      max_tokens: 10,
+      temperature: .1,
       system: systemPrompt,
       messages: messages.map(msg => ({
         role: msg.role,
