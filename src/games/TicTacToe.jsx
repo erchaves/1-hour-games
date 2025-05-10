@@ -133,27 +133,32 @@ const TicTacToe = () => {
 
         try {
           const response = await requestTicTacToeMove(boardState);
-          const claudeMove = parseInt(response.trim());
+          let claudeMove = parseInt(response.trim());
 
-          if (!isNaN(claudeMove) && claudeMove >= 0 && claudeMove < 9 && !newBoard[claudeMove]) {
-            newBoard[claudeMove] = 'X';
+          const isValidMove = (!isNaN(claudeMove) && claudeMove >= 0 && claudeMove < 9 && !newBoard[claudeMove]);
+          if (!isValidMove) {
+            console.warn('Claude made an invalid move:', claudeMove);
+            // Make Claude choose the first open move.
+            claudeMove = boardState.indexOf('-');
+          }
 
-            const finalGameState = {
-              ...newGameState,
-              board: newBoard,
-              currentPlayer: 'O'
-            };
+          newBoard[claudeMove] = 'X';
 
-            setGameState(finalGameState);
+          const finalGameState = {
+            ...newGameState,
+            board: newBoard,
+            currentPlayer: 'O'
+          };
 
-            // Check for win or draw after Claude's move
-            if (checkWinner(newBoard) || newBoard.every(cell => cell)) {
-              setGameState(prev => ({
-                ...prev,
-                gameOver: true,
-                winner: checkWinner(newBoard)
-              }));
-            }
+          setGameState(finalGameState);
+
+          // Check for win or draw after Claude's move
+          if (checkWinner(newBoard) || newBoard.every(cell => cell)) {
+            setGameState(prev => ({
+              ...prev,
+              gameOver: true,
+              winner: checkWinner(newBoard)
+            }));
           }
         } catch (error) {
           console.error('Error getting Claude\'s move:', error);
