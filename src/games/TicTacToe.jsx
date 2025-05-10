@@ -212,12 +212,12 @@ const TicTacToe = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-4 max-w-full overflow-hidden">
       <Link to="/" className="mb-8 text-arcade-yellow hover:text-arcade-green transition-colors text-2xl">
         ← Back to Menu
       </Link>
 
-      <h1 className="text-5xl font-bold mb-6 font-['Press_Start_2P']">TicTacToe</h1>
+      <h1 className="text-3xl font-bold mb-6 font-['Press_Start_2P'] max-w-full overflow-hidden text-center">Tic Tac Toe</h1>
 
       <div className="relative">
         <canvas
@@ -226,17 +226,19 @@ const TicTacToe = () => {
         />
         {isClaudeThinking && (
           <div className="inset-0 flex items-center justify-center bg-black bg-opacity-70">
-            <div className="absolute bottom-0 left-0 flex-nowrap">
-              <p className="absolute text-arcade-green font-['Press_Start_2P'] text-xl animate-pulse w-full text-nowrap pt-4">
-                Claude is thinking...
-              </p>
+            <div className="absolute bottom-0 left-0 flex">
+              <div className="absolute top-0 left-0 flex">
+                <p className="text-arcade-green font-['Press_Start_2P'] text-m animate-pulse max-w-full truncate pt-4">
+                  Claude is thinking...
+                </p>
+              </div>
             </div>
           </div>
         )}
         {gameState.gameOver && (
           <button
             onClick={resetGame}
-            className="mt-4 px-8 py-3 bg-arcade-yellow text-black font-['Press_Start_2P'] text-xl hover:bg-arcade-green transition-colors"
+            className="mt-4 mx-auto px-8 py-3 bg-arcade-yellow text-black font-['Press_Start_2P'] text-xl hover:bg-arcade-green transition-colors flex"
           >
             Play Again
           </button>
