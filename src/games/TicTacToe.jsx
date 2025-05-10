@@ -219,26 +219,26 @@ const TicTacToe = () => {
 
       <h1 className="text-3xl font-bold mb-6 font-['Press_Start_2P'] max-w-full overflow-hidden text-center">Tic Tac Toe</h1>
 
-      <div className="flex flex-col items-center relative">
+      <div className="flex flex-col items-center">
         <canvas
           ref={canvasRef}
           className="border-2 border-arcade-yellow"
         />
-        {isClaudeThinking && (
-          <div className="absolute -bottom-8 w-full text-center">
-            <p className="text-arcade-green font-['Press_Start_2P'] text-[14px] animate-pulse">
+        <div className="h-8 mt-2 flex items-center justify-center">
+          {isClaudeThinking && (
+            <p className="text-arcade-green font-['Press_Start_2P'] text-[16px] animate-pulse">
               Claude is thinking...
             </p>
-          </div>
-        )}
-        {gameState.gameOver && (
-          <button
-            onClick={resetGame}
-            className="mt-4 px-8 py-3 bg-arcade-yellow text-black font-['Press_Start_2P'] text-xl hover:bg-arcade-green transition-colors"
-          >
-            Play Again
-          </button>
-        )}
+          )}
+          {gameState.gameOver && (
+            <button
+              onClick={resetGame}
+              className="mt-8 px-6 py-3 bg-arcade-yellow text-black font-['Press_Start_2P'] text-[16px] hover:bg-arcade-green transition-colors"
+            >
+              Play Again
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
