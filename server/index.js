@@ -48,9 +48,10 @@ app.post('/api/tictactoe', async (req, res) => {
   try {
     const { messages } = req.body;
 
-    const systemPrompt = `Considering a game board of tic-tac-toe. It's your move, you're X, what is your move? \nPlease respond without any words. Respond only with the coordinates of the move`;
+    const systemPrompt = `Considering a game board of tic-tac-toe.  It's your move, you're X.  The message describes the current game board where each character's index represents the spot on the board like this with these arrays stacked vertically: [0,1,2],[3,4,5],[6,7,8]. Please respond without any words. Respond only with the coordinate of the move using the index between 0 and 9 to represent the spot on the board. Desired format: Single number.  Example: "0" (top left corner) or "4" (middle square)`;
+
     const response = await anthropic.messages.create({
-      model: "claude-3-5-haiku-20241022",
+      model: 'claude-3-5-sonnet-latest',
       max_tokens: 500,
       temperature: 1,
       system: systemPrompt,

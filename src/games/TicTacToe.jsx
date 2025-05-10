@@ -11,7 +11,7 @@ const TicTacToe = () => {
     winner: null,
     gameOver: false
   });
-  const { sendMessage } = useConversation();
+  const { requestTicTacToeMove } = useConversation();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -130,11 +130,10 @@ const TicTacToe = () => {
 
         // Claude's turn
         const boardState = newBoard.map(cell => cell || '-').join('');
-        const prompt = `You are playing TicTacToe as X against a human player (O). The current board state is (from top-left to bottom-right): ${boardState}. Make your move by responding with a single number 0-8 representing the position (0=top-left, 1=top-middle, 2=top-right, 3=middle-left, etc). Only respond with the number, nothing else.`;
 
         try {
-          const response = await sendMessage(prompt);
-          const claudeMove = parseInt(response.text.trim());
+          const response = await requestTicTacToeMove(boardState);
+          const claudeMove = parseInt(response.trim());
 
           if (!isNaN(claudeMove) && claudeMove >= 0 && claudeMove < 9 && !newBoard[claudeMove]) {
             newBoard[claudeMove] = 'X';
@@ -177,7 +176,7 @@ const TicTacToe = () => {
       game.stop();
       canvas.removeEventListener('click', handleClick);
     };
-  }, [gameState, sendMessage]);
+  }, [gameState, requestTicTacToeMove]);
 
   const checkWinner = (board) => {
     const lines = [

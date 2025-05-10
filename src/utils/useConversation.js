@@ -97,31 +97,18 @@ export const useConversation = () => {
         timestamp: new Date(),
       };
 
-      // Add user message to state
-      setMessages((prev) => [...prev, userMessage]);
-      setIsLoading(true);
-      setError(null);
-
       try {
         // Format all messages for the API
-        const formattedMessages = formatMessagesForApi([...messages, userMessage]);
+        const formattedMessages = formatMessagesForApi([userMessage]);
 
         // Send to our Express server
-        const response = await axios.post('/api/claude', {
+        const response = await axios.post('/api/tictactoe', {
           messages: formattedMessages,
         });
 
-        // Create a new assistant message from the response
-        const assistantMessage = {
-          id: (Date.now() + 1).toString(),
-          text: response.data.text,
-          sender: 'assistant',
-          timestamp: new Date(),
-        };
+        const responseText = response.data.text;
 
-        // Add assistant message to state
-        setMessages((prev) => [...prev, assistantMessage]);
-        return assistantMessage;
+        return responseText;
       } catch (err) {
         console.error('Error sending message:', err);
         setError('Failed to get a response. Please try again.');
@@ -130,7 +117,7 @@ export const useConversation = () => {
         setIsLoading(false);
       }
     },
-    [messages, formatMessagesForApi]
+    [formatMessagesForApi]
   );
 
   // Clear conversation
@@ -145,6 +132,7 @@ export const useConversation = () => {
     isLoading,
     error,
     sendMessage,
+    requestTicTacToeMove,
     clearConversation,
   };
 };
