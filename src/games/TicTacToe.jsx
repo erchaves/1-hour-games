@@ -85,7 +85,7 @@ const TicTacToe = () => {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#fff';
-        ctx.font = '24px "Press Start 2P"';
+        ctx.font = '32px "Press Start 2P"';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const message = gameState.winner
@@ -213,11 +213,11 @@ const TicTacToe = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-4">
-      <Link to="/" className="mb-8 text-arcade-yellow hover:text-arcade-green transition-colors">
+      <Link to="/" className="mb-8 text-arcade-yellow hover:text-arcade-green transition-colors text-2xl">
         ← Back to Menu
       </Link>
 
-      <h1 className="text-4xl font-bold mb-4 font-['Press_Start_2P']">TicTacToe</h1>
+      <h1 className="text-5xl font-bold mb-6 font-['Press_Start_2P']">TicTacToe</h1>
 
       <div className="relative">
         <canvas
@@ -236,7 +236,7 @@ const TicTacToe = () => {
         {gameState.gameOver && (
           <button
             onClick={resetGame}
-            className="mt-4 px-6 py-2 bg-arcade-yellow text-black font-['Press_Start_2P'] hover:bg-arcade-green transition-colors items-center justify-center"
+            className="mt-4 px-8 py-3 bg-arcade-yellow text-black font-['Press_Start_2P'] text-xl hover:bg-arcade-green transition-colors"
           >
             Play Again
           </button>

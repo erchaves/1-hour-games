@@ -21,7 +21,7 @@ const GameMenu = () => {
     {
       id: 'tictactoe',
       title: 'Tic Tac Toe',
-      description: `Play Tic Tac Toe against Claude.ai`,
+      description: `Play Tic Tac Toe against AI`,
       color: 'from-indigo-600 to-purple-600',
       icon: '#️'
     },
@@ -53,10 +53,19 @@ const GameMenu = () => {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-12"
+        className="text-center mb-2"
       >
-        <h1 className="text-6xl font-arcade mb-4">Vibe-Code Arcade</h1>
-        <p className="text-xl font-arcade text-arcade-yellow">MINI GAMES VIBE-CODED IN 1 HOUR. BECAUSE NO REASON</p>
+        <h1 className="text-7xl font-arcade mb-4">Vibe-Code Arcade</h1>
+        <p className="text-2xl font-arcade text-arcade-yellow">MINI GAMES VIBE-CODED IN 1 HOUR.</p>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="text-center mb-6"
+      >
+        <p className="font-arcade text-xl animate-blink">FREE PLAY</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
@@ -69,23 +78,14 @@ const GameMenu = () => {
           >
             <Link to={`/games/${game.id}`}>
               <div className={`p-6 rounded-lg bg-gradient-to-br ${game.color} hover:scale-105 transform transition-all cursor-pointer`}>
-                <div className="text-5xl mb-4 text-center">{game.icon}</div>
-                <h2 className="text-xl font-arcade mb-2 text-center">{game.title}</h2>
-                <p className="text-sm text-center opacity-80">{game.description}</p>
+                <div className="text-6xl mb-4 text-center">{game.icon}</div>
+                <h2 className="text-2xl font-arcade mb-2 text-center">{game.title}</h2>
+                <p className="text-lg text-center opacity-80">{game.description}</p>
               </div>
             </Link>
           </motion.div>
         ))}
       </div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="text-center mt-12"
-      >
-        <p className="font-arcade text-sm animate-blink">FREE PLAY</p>
-      </motion.div>
     </div>
   );
 };
