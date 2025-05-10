@@ -11,6 +11,7 @@ const TicTacToe = () => {
     winner: null,
     gameOver: false
   });
+  const [isClaudeThinking, setIsClaudeThinking] = useState(false);
   const { requestTicTacToeMove } = useConversation();
 
   useEffect(() => {
@@ -131,6 +132,7 @@ const TicTacToe = () => {
         // Claude's turn
         const boardState = newBoard.map(cell => cell || '-').join('');
 
+        setIsClaudeThinking(true);
         try {
           const response = await requestTicTacToeMove(boardState);
           let claudeMove = parseInt(response.trim());
@@ -162,6 +164,8 @@ const TicTacToe = () => {
           }
         } catch (error) {
           console.error('Error getting Claude\'s move:', error);
+        } finally {
+          setIsClaudeThinking(false);
         }
       }
     };
@@ -220,10 +224,19 @@ const TicTacToe = () => {
           ref={canvasRef}
           className="border-2 border-arcade-yellow"
         />
+        {isClaudeThinking && (
+          <div className="inset-0 flex items-center justify-center bg-black bg-opacity-70">
+            <div className="absolute bottom-0 left-0 flex-nowrap">
+              <p className="absolute text-arcade-green font-['Press_Start_2P'] text-xl animate-pulse w-full text-nowrap pt-4">
+                Claude is thinking...
+              </p>
+            </div>
+          </div>
+        )}
         {gameState.gameOver && (
           <button
             onClick={resetGame}
-            className="mt-4 px-6 py-2 bg-arcade-yellow text-black font-['Press_Start_2P'] hover:bg-arcade-green transition-colors"
+            className="mt-4 px-6 py-2 bg-arcade-yellow text-black font-['Press_Start_2P'] hover:bg-arcade-green transition-colors items-center justify-center"
           >
             Play Again
           </button>
