@@ -11,6 +11,7 @@ const TicTacToe = () => {
     winner: null,
     gameOver: false
   });
+  const [isClaudeThinking, setIsClaudeThinking] = useState(false);
   const { requestTicTacToeMove } = useConversation();
 
   useEffect(() => {
@@ -84,7 +85,7 @@ const TicTacToe = () => {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#fff';
-        ctx.font = '24px "Press Start 2P"';
+        ctx.font = '32px "Press Start 2P"';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const message = gameState.winner
@@ -131,6 +132,7 @@ const TicTacToe = () => {
         // Claude's turn
         const boardState = newBoard.map(cell => cell || '-').join('');
 
+        setIsClaudeThinking(true);
         try {
           const response = await requestTicTacToeMove(boardState);
           let claudeMove = parseInt(response.trim());
@@ -162,6 +164,8 @@ const TicTacToe = () => {
           }
         } catch (error) {
           console.error('Error getting Claude\'s move:', error);
+        } finally {
+          setIsClaudeThinking(false);
         }
       }
     };
@@ -209,21 +213,30 @@ const TicTacToe = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-4">
-      <Link to="/" className="mb-8 text-arcade-yellow hover:text-arcade-green transition-colors">
+      <Link to="/" className="mb-8 text-arcade-yellow hover:text-arcade-green transition-colors text-2xl">
         ← Back to Menu
       </Link>
 
-      <h1 className="text-4xl font-bold mb-4 font-['Press_Start_2P']">TicTacToe</h1>
+      <h1 className="text-5xl font-bold mb-6 font-['Press_Start_2P']">TicTacToe</h1>
 
       <div className="relative">
         <canvas
           ref={canvasRef}
           className="border-2 border-arcade-yellow"
         />
+        {isClaudeThinking && (
+          <div className="inset-0 flex items-center justify-center bg-black bg-opacity-70">
+            <div className="absolute bottom-0 left-0 flex-nowrap">
+              <p className="absolute text-arcade-green font-['Press_Start_2P'] text-xl animate-pulse w-full text-nowrap pt-4">
+                Claude is thinking...
+              </p>
+            </div>
+          </div>
+        )}
         {gameState.gameOver && (
           <button
             onClick={resetGame}
-            className="mt-4 px-6 py-2 bg-arcade-yellow text-black font-['Press_Start_2P'] hover:bg-arcade-green transition-colors"
+            className="mt-4 px-8 py-3 bg-arcade-yellow text-black font-['Press_Start_2P'] text-xl hover:bg-arcade-green transition-colors"
           >
             Play Again
           </button>

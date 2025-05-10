@@ -97,6 +97,7 @@ export const useConversation = () => {
         timestamp: new Date(),
       };
 
+      setIsLoading(true);
       try {
         // Format all messages for the API
         const formattedMessages = formatMessagesForApi([userMessage]);

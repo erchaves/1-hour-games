@@ -3,6 +3,9 @@
 
 /* Custom theme configuration for Tailwind v4 */
 @theme {
+  /* Base font size */
+  --font-size-root: 18px;
+  
   /* Arcade colors */
   --color-arcade-green: #00ff00;
   --color-arcade-blue: #00ffff;
@@ -50,4 +53,9 @@ body {
   font-family: var(--font-family-retro);
   background-color: var(--color-arcade-dark);
   color: var(--color-arcade-light);
+  font-size: 1.2rem;
+}
+
+html {
+  font-size: var(--font-size-root);
 }
